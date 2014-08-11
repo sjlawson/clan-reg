@@ -26,11 +26,18 @@ function calcTotal()
 
 function validateForm()
 {
-    //validate clanName
-    var clanInfo = $.get('ClanRegistrationTasks.php?action=getClanByClanName&clanName=' + $('#clanName').val());
-
-    if(clanInfo.clanName) {
-        alert('Sorry, that clan has already registered!');
+$.ajaxSetup({async: false});
+alert('Getting: ' + 'ClanRegistrationTasks.php?action=getClanByClanName&clanName=' + $('#clanName').val());
+    //validate clanName 
+    var clanInfo = new Object();
+    var clanName = '';    
+    $.get('ClanRegistrationTasks.php?action=getClanByClanName&clanName=' + $('#clanName').val(), function(data) {
+    	clanInfo = JSON.parse(data);
+    	clanName = clanInfo.clanName;
+    });
+    
+    if(clanInfo.clanName != undefined) {
+        alert('Sorry, clan ' + clanInfo.clanName + ' has already registered!');
         return false;
     }
 

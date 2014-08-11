@@ -1,5 +1,8 @@
 <?php
-header('Content-Type: application/json');
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+
+//header('Content-Type: application/json');
 require_once('../wp-config.php');
 defined('ABSPATH') or die("No script kiddies please!");
 
@@ -120,7 +123,8 @@ class ClanRegistrationTasks {
                 LIMIT 1";
 
         $stmt = $this->dbh->prepare($query);
-        $stmt->bindValue(':year', $year, PDO::PARAM_STR);
+        $stmt->bindValue(':clanName', $this->urlParams['clanName'], PDO::PARAM_STR );
+        $stmt->bindValue(':year', $currYear, PDO::PARAM_STR);
         $stmt->execute();
 
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -131,7 +135,9 @@ class ClanRegistrationTasks {
 
 $app = new ClanRegistrationTasks();
 
+// echo var_dump(method_exists($app, $_GET['action']));
+
 if (!empty($_GET['action']) && method_exists($app, $_GET['action'])) {
-    $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+    $action = $_GET['action'];
     $app->$action();
 }

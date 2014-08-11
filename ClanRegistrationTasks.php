@@ -43,6 +43,10 @@ class ClanRegistrationTasks {
         return $stmt;
     }
 
+    /**
+     * Load registered clan names for current year, or next year if NOW is after October
+     * return $markup - html table
+     */
     public function printCurrentRegistrations()
     {
         $currYear = date('m') > 10 ? date('Y') + 1 : date('Y');
@@ -57,6 +61,10 @@ class ClanRegistrationTasks {
         return $markup;
     }
 
+    /**
+     * Save clan registration from form data
+     * return boolean true on success
+     */
     public function registerClan()
     {
         $currYear = date('m') > 10 ? date('Y') + 1 : date('Y');
@@ -90,8 +98,15 @@ class ClanRegistrationTasks {
                 :amountPayable, :year
             )";
 
+        $stmt = $this->dbh->prepare($query);
+
+        return $stmt->execute($params);
     }
 
+    /**
+     * Get clan information by name is registered during the current year
+     * @return array
+     */
     public function getClanByClanName()
     {
         if(empty($this->urlParams['clanName']) ) {
@@ -113,7 +128,6 @@ class ClanRegistrationTasks {
     }
 
 }
-
 
 $app = new ClanRegistrationTasks();
 

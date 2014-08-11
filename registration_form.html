@@ -1,0 +1,161 @@
+<html>
+<head>
+
+<title>Indianapolis Scottish Highland Games</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type='text/javascript'>
+
+function calcTotal()
+{
+
+    var electricalChecked = document.getElementById('electrical').checked;
+    var tables = document.getElementById('tables').value;
+    var chairs = document.getElementById('chairs').value;
+
+    var baseFee = 50;
+    var electricalFee = 0;
+    if (electricalChecked) {
+        electricalFee = 10;
+    }
+
+    var total = (tables * 6) + (chairs * 2) + electricalFee + 50;
+
+    document.getElementById('amount').value = total;
+    document.getElementById('displayAmount').innerHTML = total;
+}
+
+function validateForm()
+{
+    //validate clanName
+    var clanInfo = $.get('ClanRegistrationTasks.php?action=getClanByClanName&clanName=' + $('#clanName').val());
+
+    if(clanInfo.clanName) {
+        alert('Sorry, that clan has already registered!');
+        return false;
+    }
+
+    if( $('#clanName').val() == '' ||
+        $('#contactPerson').val() == '' ||
+        $('#phone').val() == '' ||
+        $('#email').val() == '' ||
+        $('#address').val() == '' ||
+        $('#city').val() == '' ||
+        $('#state').val() == '' ||
+        $('#zip').val() == '' ) {
+
+        alert('Please check that all fields are filled correctly!');
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function dataSubmit()
+{
+
+    if (!validateForm()) {
+        return false;
+    }
+
+    var endppoint = "ClanRegistrationTasks.php?action=registerClan"
+
+    if($.post( endpoint, $( "#formdata" ).serialize() )) {
+        // $('#formdata').submit();
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+</script>
+</head>
+<body>
+<div style='max-width: 850;margin-left: auto; margin-right: auto; text-align: center;'>
+<img src="http://indyscotgamesandfest.com/wp-content/uploads/2014/08/2014_games_logo.jpg" width=250 />
+<h2>Clan Registration</h2>
+<div style='text-align: left;width: 400px;float: left;'>
+<p>Basic Clan Registration: $50.00</p>
+
+<p>For the 2014 Games there will be a $50 admission fee for your 10' x 10' booth
+space which will include two wristbands for admission. Tables and chairs will not
+be furnished but may be ordered below.</p>
+
+<p>Do you  require electricity for your booth?<br />
+<input type='radio' name='electrical' id='electrical' value='1' onchange="calcTotal()" />
+Yes + $10.00 <br />
+
+<input type='radio' name='electrical' value='0' checked=true onchange="calcTotal()"/>
+No
+</p>
+
+<p>Tables: $6.00 each.</p>
+<p> Enter number of tables:
+<input name='tables' id='tables' type='text' size='5' value=0 onchange="calcTotal()" /></p>
+
+<p>Chairs: $2.00 each.</p>
+<p> Enter number of chairs:
+<input name='chairs' id='chairs' type='text' size='5' value=0 onchange="calcTotal()"/></p>
+
+<p>Total: $<span id='displayAmount'>50.00</span></p>
+
+<!-- <button id='updateButton'>Update Total</button> -->
+
+<p>After you enter your information and click the Buy Now button,
+you will be taken to the PayPal site for payment.</p>
+
+</div>
+<div style='text-align: left;width: 400px;float: left;'>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" name='formdata' id='formdata' onsubmit='return dataSubmit();' >
+
+       <input type='hidden' name="amount" id='amount' value="50.00" /></p>
+
+     <label>Please fill all fields.</label>
+
+     <p>Clan Name or Assoc:<br />
+     <input type='text' name='clanName' id='clanName' /></p>
+
+     <p>Person Responsible:<br />
+     <input type='text' name='contactPerson' id='contactPerson' /></p>
+
+     <p>Phone: <br />
+     <input type='text' name='phone' id='phone' /></p>
+
+     <p>Email: <br />
+     <input type='text' name='email' id='email' size='30' /></p>
+
+     <p>Address: <br />
+     <input type='text' name='address' id='address' /></p>
+
+     <p>
+     City: &nbsp;<input type='text' name='city' id='city' /><br />
+     State: <input type='text' name='state' id='state' size=2 />
+     Zip: <input type='text' name='zip' id='zip' size=5 /></p>
+
+
+    <br>
+    <input name="currency_code" type="hidden" value="USD">
+    <input name="shipping" type="hidden" value="0.00">
+    <input name="tax" type="hidden" value="0.00">
+    <input name="return" type="hidden" value="urlOnValidPayment">
+    <input name="cancel_return" type="hidden" value="UrlOnCancelPayment">
+    <input name="notify_url" type="hidden" value="URLForValidationPayement">
+    <input name="cmd" type="hidden" value="_xclick">
+    <input name="business" type="hidden" value="indyscot@gmail.com">
+    <input name="item_name" type="hidden" value="ClanBoothRegistration">
+    <input name="no_note" type="hidden" value="1">
+    <input type="hidden" name="no_shipping" value="1">
+    <input name="lc" type="hidden" value="EN">
+    <input name="bn" type="hidden" value="PP-BuyNowBF">
+    <input name="custom" type="hidden" value="custom data">
+    <input type="image" src="https://www.paypalobjects.com/en_US/CH/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+    <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+    </form>
+</div>
+<div style='clear:both; width: 400px;'>
+</div>
+
+</div>
+</body>
+</html>
